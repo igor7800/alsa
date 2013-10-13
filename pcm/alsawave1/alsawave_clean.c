@@ -220,8 +220,7 @@ int main(int argc, char **argv)
   // No wave data loaded yet
   WavePtr = 0;
   if (argc < 2) printf("You must supply the name of a 16-bit mono WAVE file to play\n");
-  // Load the wave file
-  else if (!waveLoad(argv[1])){
+  else if (!waveLoad(argv[1])){   // Load the wave file
     register int err;
     // Open audio card we wish to use for playback
     if ((err = snd_pcm_open(&PlaybackHandle, &SoundCardPortName[0], SND_PCM_STREAM_PLAYBACK, 0)) < 0)
@@ -231,16 +230,13 @@ int main(int argc, char **argv)
 	{
 	case 8:
 	  err = SND_PCM_FORMAT_U8;
-	  break;
-			
+	  break;			
 	case 16:
 	  err = SND_PCM_FORMAT_S16;
-	  break;
-	  
+	  break;	  
 	case 24:
 	  err = SND_PCM_FORMAT_S24;
-	  break;
-	  
+	  break;	  
 	case 32:
 	  err = SND_PCM_FORMAT_S32;
 	  break;
@@ -248,15 +244,12 @@ int main(int argc, char **argv)
       // Set the audio card's hardware parameters (sample rate, bit resolution, etc)
       if ((err = snd_pcm_set_params(PlaybackHandle, err, SND_PCM_ACCESS_RW_INTERLEAVED, WaveChannels, WaveRate, 1, 500000)) < 0)
 	printf("Can't set sound parameters: %s\n", snd_strerror(err));
-      // Play the waveform
-      else
-	play_audio();
-      // Close sound card
-      snd_pcm_close(PlaybackHandle);
+
+      else play_audio();             // Play the waveform      
+      snd_pcm_close(PlaybackHandle); // Close sound card
     }
   }
-  // Free the WAVE data
-  free_wave_data();
+  free_wave_data();   // Free the WAVE data
   return(0);
 }
 
