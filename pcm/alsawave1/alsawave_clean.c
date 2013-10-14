@@ -5,14 +5,10 @@
 // blocking.
 //
 // Compile as so to create "alsawave":
-// gcc -o alsawave alsawave.c -lasound
+// gcc -o alsawave_clean alsawave_clean.c -lasound
 //
 // Run it from a terminal, specifying the name of a WAVE file to play:
-// ./alsawave MyWaveFile.wav
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
+// ./alsawave_clean MyWaveFile.wav
 #include <alsa/asoundlib.h>
 
 // Size of the audio card hardware buffer. Here we want it
@@ -29,7 +25,7 @@
 #define PERIODSIZE	(2*64)
 
 
-/////////////////////// WAVE File Stuff /////////////////////
+// WAVE File Hedder Stuff 
 // An IFF file header looks like this
 typedef struct _FILE_head
 {
@@ -66,7 +62,7 @@ unsigned char       *WavePtr;        // Points to loaded WAVE file's data
 snd_pcm_uframes_t    WaveSize;       // Size (in frames) of loaded WAVE file's data
 unsigned short	     WaveRate;       // Sample rate
 unsigned char	     WaveBits;       // Bit resolution
-unsigned char	     WaveChannels; // Number of channels in the wave file
+unsigned char	     WaveChannels;   // Number of channels in the wave file
 
 // The name of the ALSA port we output to. In this case, we're
 // directly writing to hardware card 0,0 (ie, first set of audio
@@ -81,11 +77,12 @@ static const unsigned char Data[4] = { 'd', 'a', 't', 'a' };
 
 
 /**
- * Compares the passed ID str (ie, a ptr to 4 Ascii
- * bytes) with the ID at the passed ptr. Returns TRUE if
- * a match, FALSE if not.
+ * Compares the passed 
+ * @param *id  ID str (ie, a ptr to 4 Ascii  * bytes)
+ * @param *ptr ID at the passed ptr 
+ * @return TRUE if a match
+ * @return FALSE if not
  */
-
 static unsigned char compareID(const unsigned char * id, unsigned char * ptr)
 {
   register unsigned char i = 4;
@@ -95,6 +92,7 @@ static unsigned char compareID(const unsigned char * id, unsigned char * ptr)
     }
   return(1);
 }
+
 
 
 /**
@@ -107,7 +105,6 @@ static unsigned char compareID(const unsigned char * id, unsigned char * ptr)
  * containing the wave data, and "WaveSize" to the size
  * in sample points.
  */
-
 static unsigned char waveLoad(const char *fn)
 {
   const char *message;
