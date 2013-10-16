@@ -16,7 +16,7 @@
 #include <alsa/asoundlib.h>
 #include <stdio.h>
  
-#define PCM_DEVICE "default"
+#define PCM_DEVICE "plughw:0,0"
  
  
 /**
@@ -133,7 +133,6 @@ void pb_set_rate(snd_pcm_t *pcm_handle,
 void pb_set_params(snd_pcm_t *pcm_handle, snd_pcm_hw_params_t *params,
 		   int channels, int rate)
 {
-  unsigned int pcm;
   pb_set_access(pcm_handle,params);
   pb_set_format(pcm_handle,params);
   pb_set_channels(pcm_handle,params,channels);
@@ -195,13 +194,14 @@ void pb_play_file(snd_pcm_t *pcm_handle,  snd_pcm_uframes_t frames,
   int loops;
   for (loops = (seconds * 1000000) / period; loops > 0; loops--)
     {
-      if (pcm = read(0, buff, buff_size) == 0) 
+      pcm = read(0, buff, buff_size);
+      if (pcm == 0) 
 	{
 	  printf("Early end of file.\n");
 	  exit(1);
 	}
-      
-      if (pcm = snd_pcm_writei(pcm_handle, buff, frames) == -EPIPE)
+      pcm = snd_pcm_writei(pcm_handle, buff, frames);
+      if (pcm == -EPIPE)
 	{
 	  printf("XRUN.\n");
 	  snd_pcm_prepare(pcm_handle);
@@ -245,8 +245,9 @@ int main(int argc, char *argv[])
 
   /* Allocate buffer to hold single period */
   snd_pcm_hw_params_get_period_size(params, &frames, 0);
-   buff_size = frames * channels * 2 /* 2 -> sample size */;
+  buff_size = frames * channels * 2 /* 2 -> sample size */;
   buff = (char *) malloc(buff_size);
+  
 
   //snd_pcm_hw_params_get_period_time(params, &tmp, NULL);  
   period = pb_get_period_time(params);
