@@ -205,10 +205,8 @@ unsigned int pb_get_period_time(snd_pcm_hw_params_t *params)
  * write error when unable to write to PCM device 
  * @param **pcm_handle handle to playback
  * @param frames period size
- * @param period length of period
  * @param *buffer pointer to buffer
  * @param buff_size size of the buffer
- * @param seconds ammount of seconds to be played
  */
 void pb_play_file(snd_pcm_t *pcm_handle,  
 		  snd_pcm_uframes_t frames, 
@@ -237,3 +235,44 @@ void pb_play_file(snd_pcm_t *pcm_handle,
 
 }
 
+
+/**
+ * Reading from audio card to the buffer
+ * write errors too
+ * @param **pcm_handle handle to playback
+ * @param frames period size
+ * @param period length of period
+ * @param *buffer pointer to buffer
+ * @param buff_size size of the buffer
+ */
+void pb_record(snd_pcm_t *pcm_handle,  
+		  snd_pcm_uframes_t frames, 
+		  short *buff)
+{
+  unsigned int pcm;
+  pcm = snd_pcm_readi (pcm_handle, buff, frames);
+  if (pcm != frames) 
+    {
+      fprintf (stderr, "ERROR: read from audio interface failed (%s)\n",
+	       snd_strerror (pcm));
+      exit (1);
+    }
+  if (pcm == -EBADFD)
+    {
+      fprintf (stderr, "ERROR: PCM is not in the right state (%s)\n",
+	       snd_strerror (pcm));
+      exit (1);
+    }
+  if (pcm == -EPIPE)
+    {
+      fprintf (stderr, "ERROR: an overrun occured  (%s)\n",
+	       snd_strerror (pcm));
+      exit (1);
+    }
+  if (pcm == -ESTRPIPE)
+    {
+      fprintf (stderr, "ERROR: a suspend event occured (%s)\n",
+	       snd_strerror (pcm));
+      exit (1);
+    }
+}
