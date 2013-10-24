@@ -14,28 +14,28 @@
 
 int main (int argc, char *argv[])
 {
-  int i;
-  short buf[SIZE];
-  snd_pcm_t *capture_handle;
-  snd_pcm_hw_params_t *hw_params;
+    int i;
+    char buf[SIZE];
+    snd_pcm_t *capture_handle;
+    snd_pcm_hw_params_t *params;
   
   
-  pb_open_pcm(&capture_handle,PCM_DEVICE,SND_PCM_STREAM_CAPTURE,0); 
-  snd_pcm_hw_params_malloc (&hw_params);
-  snd_pcm_hw_params_any (capture_handle, hw_params);
-  pb_set_params(capture_handle,hw_params,CHANNELS,RATE);
-  pb_write_params(capture_handle,hw_params);
-  pb_prepair_interface(capture_handle);
-  snd_pcm_hw_params_free (hw_params);
-
-  for (i = 0; i < LOOPS; i++)
-    pb_record(capture_handle,SIZE,buf);
-  
-  for (i=0;i<SIZE ;i++ ) 
-    printf ("%d\n",buf[i]);
-  
-  snd_pcm_drain(capture_handle);
-  snd_pcm_close (capture_handle);
-  exit (0);
-  return 0;
+    open_pcm(&capture_handle,PCM_DEVICE,SND_PCM_STREAM_CAPTURE,0); 
+    snd_pcm_hw_params_malloc (&params);
+    snd_pcm_hw_params_any (capture_handle, params);
+    set_params(capture_handle,params,CHANNELS,RATE);
+    write_params(capture_handle,params);
+    prepair_interface(capture_handle);
+    snd_pcm_hw_params_free (params);
+    
+    for (i = 0; i < LOOPS; i++)
+    {
+	record(capture_handle,buf,SIZE);	
+	for (i=0;i<SIZE ;i++ ) 
+	    printf ("%d\n",buf[i]);
+    }
+    snd_pcm_drain(capture_handle);
+    snd_pcm_close (capture_handle);
+    exit (0);
+    return 0;
 }

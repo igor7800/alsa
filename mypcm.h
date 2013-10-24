@@ -11,31 +11,31 @@
  * @param stream Wanted stream
  * @param mode Open mode
  */
-void pb_open_pcm (snd_pcm_t **pcm_handle, 
+void open_pcm (snd_pcm_t **pcm_handle, 
 		  char *card,
 		  snd_pcm_stream_t stream, 
 		  int mode)
 {
-  unsigned int pcm;
-  pcm = snd_pcm_open(pcm_handle,card, stream, 0);
-  if (pcm < 0)
+    unsigned int pcm;
+    pcm = snd_pcm_open(pcm_handle,card, stream, 0);
+    if (pcm < 0)
     { 
-      printf("ERROR: Can't open \"%s\" PCM device. %s\n",
-	     card, snd_strerror(pcm));
-      exit(1);
+	printf("ERROR: Can't open \"%s\" PCM device. %s\n",
+	       card, snd_strerror(pcm));
+	exit(1);
     }  
 
 }
 
-void pb_malloc_params (snd_pcm_hw_params_t *params)
+void malloc_params (snd_pcm_hw_params_t *params)
 {
-  unsigned int pcm;
-  pcm = snd_pcm_hw_params_malloc(&params);
-  if (pcm < 0)
+    unsigned int pcm;
+    pcm = snd_pcm_hw_params_malloc(&params);
+    if (pcm < 0)
     {
-      fprintf (stderr," ERROR: Can't allocate hardware parameter structure (%s)\n",
-	       snd_strerror (pcm));
-    exit (1);
+	fprintf (stderr," ERROR: Can't allocate hardware parameter structure (%s)\n",
+		 snd_strerror (pcm));
+	exit (1);
     }
 }
 
@@ -46,17 +46,17 @@ void pb_malloc_params (snd_pcm_hw_params_t *params)
  * @param **pcm_handle handle to pcm
  * @param *params configuration space
  */
-void pb_set_access (snd_pcm_t *pcm_handle, 
+void set_access (snd_pcm_t *pcm_handle, 
 		    snd_pcm_hw_params_t *params)
 {
-  unsigned int pcm;
-  pcm = snd_pcm_hw_params_set_access(pcm_handle, params,
-				     SND_PCM_ACCESS_RW_INTERLEAVED);
-  if (pcm < 0)
+    unsigned int pcm;
+    pcm = snd_pcm_hw_params_set_access(pcm_handle, params,
+				       SND_PCM_ACCESS_RW_INTERLEAVED);
+    if (pcm < 0)
     { 
-      printf("ERROR: Can't set interleaved mode. %s\n", 
-	     snd_strerror(pcm));
-      exit(1);
+	printf("ERROR: Can't set interleaved mode. %s\n", 
+	       snd_strerror(pcm));
+	exit(1);
     }
 }
 
@@ -66,18 +66,18 @@ void pb_set_access (snd_pcm_t *pcm_handle,
  * @param **pcm_handle handle to pcm
  * @param *params configuration space
  */
-void pb_set_format (snd_pcm_t *pcm_handle,
+void set_format (snd_pcm_t *pcm_handle,
 		    snd_pcm_hw_params_t *params)
 {
-  unsigned int pcm;
-  pcm = snd_pcm_hw_params_set_format(pcm_handle, params,
-				     SND_PCM_FORMAT_S16_LE);
- if (pcm < 0)
-   { 
-     printf("ERROR: Can't set format. %s\n",
-	    snd_strerror(pcm));
-     exit(1);
-   }
+    unsigned int pcm;
+    pcm = snd_pcm_hw_params_set_format(pcm_handle, params,
+				       SND_PCM_FORMAT_S16_LE);
+    if (pcm < 0)
+    { 
+	printf("ERROR: Can't set format. %s\n",
+	       snd_strerror(pcm));
+	exit(1);
+    }
 }
 
 
@@ -88,17 +88,17 @@ void pb_set_format (snd_pcm_t *pcm_handle,
  * @param *params configuration space
  * @param channels channels count
  */
-void pb_set_channels(snd_pcm_t *pcm_handle,
+void set_channels(snd_pcm_t *pcm_handle,
 		     snd_pcm_hw_params_t *params,
 		     int channels)
 {
-  unsigned int pcm;
-  pcm = snd_pcm_hw_params_set_channels(pcm_handle, params, channels);
-  if (pcm < 0)
+    unsigned int pcm;
+    pcm = snd_pcm_hw_params_set_channels(pcm_handle, params, channels);
+    if (pcm < 0)
     { 
-      printf("ERROR: Can't set channels number. %s\n", 
-	     snd_strerror(pcm));
-      exit(1);
+	printf("ERROR: Can't set channels number. %s\n", 
+	       snd_strerror(pcm));
+	exit(1);
     }
 }
 
@@ -110,17 +110,17 @@ void pb_set_channels(snd_pcm_t *pcm_handle,
  * @param *params configuration space
  * @param rate approximate rate
  */
-void pb_set_rate(snd_pcm_t *pcm_handle,
+void set_rate(snd_pcm_t *pcm_handle,
 		 snd_pcm_hw_params_t *params,
 		 int rate)
 {
-  unsigned int pcm;
-  pcm = snd_pcm_hw_params_set_rate(pcm_handle, params, rate, 0);
-  if (pcm < 0) 
+    unsigned int pcm;
+    pcm = snd_pcm_hw_params_set_rate(pcm_handle, params, rate, 0);
+    if (pcm < 0) 
     {
-      printf("ERROR: Can't set rate. %s\n", 
-	     snd_strerror(pcm));
-      exit(1);
+	printf("ERROR: Can't set rate. %s\n", 
+	       snd_strerror(pcm));
+	exit(1);
     }
 }
 
@@ -133,15 +133,15 @@ void pb_set_rate(snd_pcm_t *pcm_handle,
  * @param channels channels count
  * @param rate approximate rate
  */
-void pb_set_params(snd_pcm_t *pcm_handle, 
+void set_params(snd_pcm_t *pcm_handle, 
 		   snd_pcm_hw_params_t *params,
 		   int channels,
 		   int rate)
 {
-  pb_set_access(pcm_handle,params);
-  pb_set_format(pcm_handle,params);
-  pb_set_channels(pcm_handle,params,channels);
-  pb_set_rate(pcm_handle,params,rate);
+    set_access(pcm_handle,params);
+    set_format(pcm_handle,params);
+    set_channels(pcm_handle,params,channels);
+    set_rate(pcm_handle,params,rate);
 }
 
 
@@ -151,16 +151,16 @@ void pb_set_params(snd_pcm_t *pcm_handle,
  * @param *pcm_handle handle to the pcm
  * @param *params configuration space
  */
-void pb_write_params(snd_pcm_t *pcm_handle, 
+void write_params(snd_pcm_t *pcm_handle, 
 		     snd_pcm_hw_params_t *params)
 {
-  unsigned int pcm;
-  pcm = snd_pcm_hw_params(pcm_handle, params);
-  if (pcm < 0)
+    unsigned int pcm;
+    pcm = snd_pcm_hw_params(pcm_handle, params);
+    if (pcm < 0)
     {
-      printf("ERROR: Can't set harware parameters. %s\n",
-	     snd_strerror(pcm));
-      exit(1);
+	printf("ERROR: Can't set harware parameters. %s\n",
+	       snd_strerror(pcm));
+	exit(1);
     }
 }
 /**
@@ -168,15 +168,15 @@ void pb_write_params(snd_pcm_t *pcm_handle,
  * and writes an error if it can't be prepaired
  * @param *pcm_handle handle to the pcm
  */
-void pb_prepair_interface(snd_pcm_t *pcm_handle)
+void prepair_interface(snd_pcm_t *pcm_handle)
 {
-  unsigned int pcm;
-  pcm = snd_pcm_prepare (pcm_handle);
-  if (pcm < 0)
+    unsigned int pcm;
+    pcm = snd_pcm_prepare (pcm_handle);
+    if (pcm < 0)
     {
-      fprintf (stderr, "cannot prepare audio interface for use (%s)\n",
-	       snd_strerror (pcm));
-    exit (1);
+	fprintf (stderr, "cannot prepare audio interface for use (%s)\n",
+		 snd_strerror (pcm));
+	exit (1);
     }
 }
 
@@ -187,17 +187,17 @@ void pb_prepair_interface(snd_pcm_t *pcm_handle)
  * @param *params configuration space
  * @return tmp approximate period duration
  */
-unsigned int pb_get_period_time(snd_pcm_hw_params_t *params)
+unsigned int get_period_time(snd_pcm_hw_params_t *params)
 {
-  unsigned int tmp,pcm;
-  pcm = snd_pcm_hw_params_get_period_time(params, &tmp, NULL);  
-  if (pcm < 0)
+    unsigned int tmp,pcm;
+    pcm = snd_pcm_hw_params_get_period_time(params, &tmp, NULL);  
+    if (pcm < 0)
     {
-      printf("ERROR: Can't extract maximum period time.%s\n",
-	     snd_strerror(pcm));
-      exit(1); 
+	printf("ERROR: Can't extract maximum period time.%s\n",
+	       snd_strerror(pcm));
+	exit(1); 
     }
-  return tmp;
+    return tmp;
 }
 
 /**
@@ -208,29 +208,29 @@ unsigned int pb_get_period_time(snd_pcm_hw_params_t *params)
  * @param *buffer pointer to buffer
  * @param buff_size size of the buffer
  */
-void pb_play_file(snd_pcm_t *pcm_handle,  
-		  snd_pcm_uframes_t frames, 
-		  char *buff, 
-		  int buff_size)
+void play(snd_pcm_t *pcm_handle,  
+	     snd_pcm_uframes_t frames,
+	     char *buff,
+	     int buffer_size)		  
 {
-  unsigned int pcm;
-  pcm = read(0, buff, buff_size);
-  if (pcm == 0) 
+    unsigned int pcm;
+    pcm = read(0, buff, buffer_size);
+    if (pcm == 0) 
     {
-      printf("Early end of file.\n");
-      exit(1);
+	printf("Early end of file.\n");
+	exit(1);
     }
-  pcm = snd_pcm_writei(pcm_handle, buff, frames);
-  if (pcm == -EPIPE)
+    pcm = snd_pcm_writei(pcm_handle, buff, frames);
+    if (pcm == -EPIPE)
     {
-      printf("XRUN.\n");
-      snd_pcm_prepare(pcm_handle);
+	printf("XRUN.\n");
+	snd_pcm_prepare(pcm_handle);
     }
-  else if (pcm < 0) 
+    else if (pcm < 0) 
     {
-      printf("ERROR. Can't write to PCM device. %s\n",
-	     snd_strerror(pcm));
-      exit(1);
+	printf("ERROR. Can't write to PCM device. %s\n",
+	       snd_strerror(pcm));
+	exit(1);
     }
 
 }
@@ -245,34 +245,35 @@ void pb_play_file(snd_pcm_t *pcm_handle,
  * @param *buffer pointer to buffer
  * @param buff_size size of the buffer
  */
-void pb_record(snd_pcm_t *pcm_handle,  
-		  snd_pcm_uframes_t frames, 
-		  short *buff)
+void record(snd_pcm_t *pcm_handle,  
+	       char *buff,	  
+	       snd_pcm_uframes_t frames) 
+		  
 {
-  unsigned int pcm;
-  pcm = snd_pcm_readi (pcm_handle, buff, frames);
-  if (pcm != frames) 
+    unsigned int pcm;
+    pcm = snd_pcm_readi (pcm_handle, buff, frames);
+    if (pcm != frames) 
     {
-      fprintf (stderr, "ERROR: read from audio interface failed (%s)\n",
-	       snd_strerror (pcm));
-      exit (1);
+	fprintf (stderr, "ERROR: read from audio interface failed (%s)\n",
+		 snd_strerror (pcm));
+	exit (1);
     }
-  if (pcm == -EBADFD)
+    if (pcm == -EBADFD)
     {
-      fprintf (stderr, "ERROR: PCM is not in the right state (%s)\n",
-	       snd_strerror (pcm));
-      exit (1);
+	fprintf (stderr, "ERROR: PCM is not in the right state (%s)\n",
+		 snd_strerror (pcm));
+	exit (1);
     }
-  if (pcm == -EPIPE)
+    if (pcm == -EPIPE)
     {
-      fprintf (stderr, "ERROR: an overrun occured  (%s)\n",
-	       snd_strerror (pcm));
-      exit (1);
+	fprintf (stderr, "ERROR: an overrun occured  (%s)\n",
+		 snd_strerror (pcm));
+	exit (1);
     }
-  if (pcm == -ESTRPIPE)
+    if (pcm == -ESTRPIPE)
     {
-      fprintf (stderr, "ERROR: a suspend event occured (%s)\n",
-	       snd_strerror (pcm));
-      exit (1);
+	fprintf (stderr, "ERROR: a suspend event occured (%s)\n",
+		 snd_strerror (pcm));
+	exit (1);
     }
 }
