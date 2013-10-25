@@ -45,19 +45,22 @@ int main(int argc, char *argv[])
     set_params(playback_handle,params,channels,rate);
     write_params(playback_handle,params);    
   
-  /* Allocate buffer to hold single period */
-  snd_pcm_hw_params_get_period_size(params, &frames, 0);
-  buf_size = frames * channels * 2 /* 2 -> sample size */;
-  buf = (char *) malloc(buf_size);  
-
-  period = get_period_time(params);
-  snd_pcm_hw_params_free(params);
-  for (i = (seconds * 1000000) / period; i > 0; i--)
-    play(playback_handle,frames,buf,buf_size); 
-
-  snd_pcm_drain(playback_handle);
-  snd_pcm_close(playback_handle);
-  free(buf);
-  return 0;
+    /* Allocate buffer to hold single period */
+    snd_pcm_hw_params_get_period_size(params, &frames, 0);
+    buf_size = frames * channels * 2 /* 2 -> sample size */;
+    buf = (char *) malloc(buf_size);  
+  
+    period = get_period_time(params);
+    snd_pcm_hw_params_free(params);
+    for (i = (seconds * 1000000) / period; i > 0; i--)
+    {
+	read(0,buf,buf_size);
+	play(playback_handle,buf,frames); 
+    }
+    
+    snd_pcm_drain(playback_handle);
+    snd_pcm_close(playback_handle);
+    free(buf);
+    return 0;
 }
  

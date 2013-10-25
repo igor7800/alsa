@@ -10,19 +10,20 @@
 #define SIZE 128
 #define CHANNELS 2
 #define RATE 44100
-#define LOOPS 10
+#define LOOPS 10000000000
+
 
 int main (int argc, char *argv[])
 {
+
     int i;
     char buf[SIZE];
     snd_pcm_t *capture_handle;
     snd_pcm_t *playback_handle;
     snd_pcm_hw_params_t *capture_params;
     snd_pcm_hw_params_t *playback_params;
-    snd_pcm_uframes_t frames;
 
-  
+
     open_pcm(&capture_handle,PCM_DEVICE,SND_PCM_STREAM_CAPTURE,0); 
     open_pcm(&playback_handle,PCM_DEVICE,SND_PCM_STREAM_PLAYBACK,0);
     //-----------------------------------------------------
@@ -40,17 +41,14 @@ int main (int argc, char *argv[])
     //----------------------------------------------------
     prepair_interface(capture_handle);
     prepair_interface(playback_handle);
-    snd_pcm_hw_params_get_period_size(capture_params, &frames, 0);
     //----------------------------------------------------
     snd_pcm_hw_params_free (playback_params);
     snd_pcm_hw_params_free (capture_params);
 
-    for (i = 0; i < LOOPS; i++)
+   for(i=0; i < LOOPS; i++)
     {
 	record(capture_handle,buf,SIZE);
-	//for (i=0;i<SIZE ;i++ ) 
-	//printf ("%d\n",buf[i]);
-	play(playback_handle,frames,buf,SIZE); 
+	play(playback_handle,buf,SIZE);	
     }
 
     snd_pcm_drain(playback_handle);

@@ -31,8 +31,6 @@ int main (int argc, char *argv[])
     for (i = 0; i < LOOPS; i++)
     {
 	record(capture_handle,buf,SIZE);	
-	for (i=0;i<SIZE ;i++ ) 
-	    printf ("%d\n",buf[i]);
     }
     snd_pcm_drain(capture_handle);
     snd_pcm_close (capture_handle);
