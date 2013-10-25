@@ -27,17 +27,6 @@ void open_pcm (snd_pcm_t **pcm_handle,
 
 }
 
-void malloc_params (snd_pcm_hw_params_t *params)
-{
-    unsigned int pcm;
-    pcm = snd_pcm_hw_params_malloc(&params);
-    if (pcm < 0)
-    {
-	fprintf (stderr," ERROR: Can't allocate hardware parameter structure (%s)\n",
-		 snd_strerror (pcm));
-	exit (1);
-    }
-}
 
 /**
  * Restrict a configuration space to contain only
@@ -209,21 +198,14 @@ unsigned int get_period_time(snd_pcm_hw_params_t *params)
  * @param buff_size size of the buffer
  */
 void play(snd_pcm_t *pcm_handle,  
-	     snd_pcm_uframes_t frames,
 	     char *buff,
 	     int buffer_size)		  
 {
     unsigned int pcm;
-    pcm = read(0, buff, buffer_size);
-    if (pcm == 0) 
-    {
-	printf("Early end of file.\n");
-	exit(1);
-    }
-    pcm = snd_pcm_writei(pcm_handle, buff, frames);
+    pcm = snd_pcm_writei(pcm_handle, buff, buffer_size);
     if (pcm == -EPIPE)
     {
-	printf("XRUN.\n");
+	printf("ERROR: an underrun occured\n");
 	snd_pcm_prepare(pcm_handle);
     }
     else if (pcm < 0) 
